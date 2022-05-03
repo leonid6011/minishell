@@ -1,30 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   print_list_token.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/05 14:58:34 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/03 17:33:21 by echrysta         ###   ########.fr       */
+/*   Created: 2022/05/03 17:33:46 by echrysta          #+#    #+#             */
+/*   Updated: 2022/05/03 17:33:47 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_strncmp(const char *str1, const char *str2, size_t n)
+void	print_list_token(t_token *list_token)
 {
-	size_t	i;
+	t_token *tmp;
 
-	i = 0;
-	while (str1[i] != '\0' && str2[i] != '\0' && n > 0)
+	tmp = list_token;
+	while (tmp)
 	{
-		if (str1[i] != str2[i])
-			break ;
-		i++;
-		n--;
+		printf("list_token->next %s\n", tmp->value);
+		tmp = tmp->next;
 	}
-	if (n == 0)
-		return (0);
-	return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+}
+
+void	print_list_env(t_env_var *list_token)
+{
+	t_env_var *tmp;
+
+	tmp = list_token;
+	while (tmp)
+	{
+		printf("tmp->key %s\n", tmp->key);
+		printf("tmp->value %s\n", tmp->value);
+		tmp = tmp->next;
+	}
 }

@@ -6,13 +6,13 @@
 /*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:26:48 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/02 16:56:13 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/05/03 16:23:12 by mbutter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int token_pipe(char *input, int *i, t_token **list_token)
+int lexer_token_pipe(char *input, int *i, t_token **list_token)
 {
 	char *token_str;
 	t_token	*token;
@@ -32,7 +32,7 @@ int token_pipe(char *input, int *i, t_token **list_token)
 	return (0);
 }
 
-int token_bracket(char *input, int *i, t_token **list_token)
+int lexer_token_bracket(char *input, int *i, t_token **list_token)
 {
 	char *token_str;
 	t_token	*token;
@@ -52,9 +52,10 @@ int token_bracket(char *input, int *i, t_token **list_token)
 		free(token_str);
 		(*i)++;
 	}
+	return (0);
 }
 
-int token_redir(char *input, int *i, t_token **list_token)
+int lexer_token_redir(char *input, int *i, t_token **list_token)
 {
 	char *token_str;
 	t_token	*token;
@@ -81,30 +82,7 @@ int token_redir(char *input, int *i, t_token **list_token)
 	return (0);
 }
 
-int ft_quotelen(char *str)
-{
-	int		len;
-	char	quote;
-
-	if (str == NULL || *str == '\0')
-		return (0);
-	len = 0;
-	if (ft_strchr("\"\'", str[len]) == NULL)
-		return (0);
-	len++;
-	quote = str[len];
-	while (str[len])
-	{
-		if (str[len] == quote)
-			break ;
-		len++;
-	}
-	if (str[len] != quote)
-		return (-1);
-	return (len);
-}
-
-int token_quote(char *input, int *i, t_token **list_token)
+int lexer_token_quote(char *input, int *i, t_token **list_token)
 {
 	char *token_str;
 	t_token	*token;
@@ -127,27 +105,13 @@ int token_quote(char *input, int *i, t_token **list_token)
 		token_add_back(list_token, token);
 		free(token_str);
 		(*i) += len;
+		if (!ft_isspace(input[*i]) && !ft_strchr("()<>|", input[*i]))
+			token->connect = 1;
 	}
 	return (0);
 }
 
-int ft_wordlen(char *str)
-{
-	int len;
-
-	len = 0;
-	while (str[len])
-	{
-		if (ft_isspace(str[len]))
-			break ;
-		else if (ft_strchr("()<>|\'\"", str[len]))
-			break;
-		len++;
-	}
-	return (len);
-}
-
-int token_word(char *input, int *i, t_token **list_token)
+int lexer_token_word(char *input, int *i, t_token **list_token)
 {
 	char *token_str;
 	t_token	*token;
@@ -158,18 +122,17 @@ int token_word(char *input, int *i, t_token **list_token)
 		return (1);
 	if (len > 0)
 	{
-		token_str = ft_substr(input, *i + 1, len - 2);
+		token_str = ft_substr(input, *i, len);
 		if (token_str == NULL)
 			return (1);
-		if (input[*i] == '\"')
-			token = token_new(e_double_quote, token_str);
-		else
-			token = token_new(e_single_quote, token_str);
+		token = token_new(e_word, token_str);
 		if (token == NULL)
 			return (1);
 		token_add_back(list_token, token);
 		free(token_str);
 		(*i) += len;
+		if (!ft_isspace(input[*i]) && !ft_strchr("()<>|", input[*i]))
+			token->connect = 1;
 	}
 	return (0);
 }

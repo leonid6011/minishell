@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/05 14:58:34 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/03 17:33:21 by echrysta         ###   ########.fr       */
+/*   Created: 2022/05/03 17:34:20 by echrysta          #+#    #+#             */
+/*   Updated: 2022/05/03 17:34:21 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_strncmp(const char *str1, const char *str2, size_t n)
+void	sig_prog(int sig)
 {
-	size_t	i;
-
-	i = 0;
-	while (str1[i] != '\0' && str2[i] != '\0' && n > 0)
+	if (sig == 2)
 	{
-		if (str1[i] != str2[i])
-			break ;
-		i++;
-		n--;
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
-	if (n == 0)
-		return (0);
-	return ((unsigned char)str1[i] - (unsigned char)str2[i]);
 }
