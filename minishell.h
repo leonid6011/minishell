@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 12:48:34 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/03 19:20:59 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:46:02 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef enum e_key_token
 	e_single_quote,
 	e_double_quote,
 	e_redir,
+	e_redir_file,
 	e_pipe,
 	e_left_bracket,
 	e_right_bracket
@@ -60,15 +61,18 @@ typedef struct s_token
 
 typedef struct s_cmd_arg
 {
-	t_token				*arguments;
+	// t_token				*arguments;
+	// заменил структуру на массив строк для экзекьютура
+	char				**arguments;
 	struct s_cmd_arg	*next;
 }	t_cmd_arg;
 
 typedef struct s_table_cmd
 {
-	t_cmd_arg	*arguments;
-	char		**in;
-	char		**out;
+	t_cmd_arg	*commands;
+	t_token		*in;
+	t_token		*out;
+	t_token		*out_append;
 }	t_table_cmd;
 
 t_info	g_envp;
@@ -79,6 +83,7 @@ void env_init(void);
 t_token	*token_new(key_token key, char *value);
 void	token_add_back(t_token **lst, t_token *new);
 void	token_destroy(t_token *token);
+void	del_elem(t_token *del, t_token *head); //для удаления токена
 
 /* lexer */
 int     ft_quotelen(char *str);
@@ -90,13 +95,21 @@ int     lexer_token_redir(char *input, int *i, t_token **list_token);
 int     lexer_token_quote(char *input, int *i, t_token **list_token);
 int     lexer_token_word(char *input, int *i, t_token **list_token);
 t_token *lexer(char *input);
+t_token *lexer_utils(t_token *list_token); // для исключения повторяющихся флагов
 
 /* signal */
 void	sig_prog(int sig);
 
 /* pasing */
 t_token     *dollar_pars(t_token *list_token);
+int			check_str(char *str1, char *str2);
 t_table_cmd *parser(t_token *list_token);
+
+/* executor */
+void executor(t_table_cmd *table);
+
+/* builtin */
+int	echo(t_table_cmd *table);
 
 /* для тестов*/
 void	print_list_token(t_token *list_token);

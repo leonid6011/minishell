@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_token_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 17:28:54 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/02 18:02:56 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/05/10 16:20:21 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int ft_quotelen(char *str)
 	if (ft_strchr("\"\'", str[len]) == NULL)
 		return (0);
 	len++;
-	quote = str[len];
+	quote = str[0];
 	while (str[len])
 	{
 		if (str[len] == quote)
@@ -32,6 +32,7 @@ int ft_quotelen(char *str)
 	}
 	if (str[len] != quote)
 		return (-1);
+	len++;
 	return (len);
 }
 
@@ -51,7 +52,7 @@ int ft_wordlen(char *str)
 	return (len);
 }
 
-int lexer_token_whitespace(char *input, int *i, t_token **list_token)
+/* int lexer_token_whitespace(char *input, int *i, t_token **list_token)
 {
 	t_token	*token;
 
@@ -65,4 +66,4 @@ int lexer_token_whitespace(char *input, int *i, t_token **list_token)
 		token_add_back(list_token, token);
 	}
 	return (0);
-}
+} */
