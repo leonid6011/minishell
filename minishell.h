@@ -23,6 +23,10 @@
 # include <string.h>
 # include <errno.h>
 # include "libft.h"
+# include <sys/types.h>
+# include <sys/wait.h>
+
+#include <dirent.h> //?
 
 typedef struct s_env_var
 {
@@ -99,6 +103,7 @@ t_token *lexer_utils(t_token *list_token); // для исключения пов
 
 /* signal */
 void	sig_prog(int sig);
+void	all_signals(void);
 
 /* pasing */
 t_token     *dollar_pars(t_token *list_token);
@@ -110,6 +115,7 @@ void executor(t_table_cmd *table);
 
 /* builtin */
 int	echo(t_table_cmd *table);
+int cd(t_table_cmd *table);
 
 /* для тестов*/
 void	print_list_token(t_token *list_token);

@@ -40,13 +40,10 @@ int main()
 	t_table_cmd *table;
 
 	env_init();
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sig_prog);
+	all_signals();
 	rl_outstream = stderr;
 	while (1)
 	{
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, sig_prog);
 		line = readline("minishell$> ");
 		if (!line)
 			print_exit();

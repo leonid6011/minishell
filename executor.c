@@ -105,8 +105,8 @@ void run_builtin(t_table_cmd *table)
 {
 	if (check_str(table->commands->arguments[0], "echo"))
 		echo(table);
-	// if (check_str(table->commands->arguments[0], "cd"))
-	// 	cd(table);
+	if (check_str(table->commands->arguments[0], "cd"))
+		cd(table);
 	// if (check_str(table->commands->arguments[0], "pwd"))
 	// 	pwd(table);
 	// if (check_str(table->commands->arguments[0], "export"))

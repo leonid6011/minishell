@@ -21,6 +21,7 @@ SRCS		=	main.c \
 				parser.c \
 				executor.c \
 				echo.c\
+				cd.c\
 				print_list_token.c
 
 OBJS		=	$(patsubst %.c,%.o,$(SRCS)) 
