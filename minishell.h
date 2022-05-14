@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 12:48:34 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/10 15:46:02 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/14 18:03:12 by mbutter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,20 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_cmd_arg
+typedef struct s_redir
 {
 	// t_token				*arguments;
 	// заменил структуру на массив строк для экзекьютура
-	char				**arguments;
-	struct s_cmd_arg	*next;
-}	t_cmd_arg;
+	char				*name;
+	int					type;
+	struct s_redir	*next;
+}	t_redir;
 
 typedef struct s_table_cmd
 {
-	t_cmd_arg	*commands;
-	t_token		*in;
-	t_token		*out;
-	t_token		*out_append;
+	char				**arguments;
+	t_redir				*redirections;
+	struct s_table_cmd	*next;
 }	t_table_cmd;
 
 t_info	g_envp;
@@ -87,11 +87,13 @@ void env_init(void);
 t_token	*token_new(key_token key, char *value);
 void	token_add_back(t_token **lst, t_token *new);
 void	token_destroy(t_token *token);
+void	token_destroy_all(t_token *token);
 void	del_elem(t_token *del, t_token *head); //для удаления токена
 
 /* lexer */
 int     ft_quotelen(char *str);
 int     ft_wordlen(char *str);
+void find_duplicate_flags(t_token **list_token); // для исключения повторяющихся флагов
 int     lexer_token_whitespace(char *input, int *i, t_token **list_token);
 int     lexer_token_pipe(char *input, int *i, t_token **list_token);
 int     lexer_token_bracket(char *input, int *i, t_token **list_token);
@@ -99,7 +101,6 @@ int     lexer_token_redir(char *input, int *i, t_token **list_token);
 int     lexer_token_quote(char *input, int *i, t_token **list_token);
 int     lexer_token_word(char *input, int *i, t_token **list_token);
 t_token *lexer(char *input);
-t_token *lexer_utils(t_token *list_token); // для исключения повторяющихся флагов
 
 /* signal */
 void	sig_prog(int sig);
@@ -107,6 +108,7 @@ void	all_signals(void);
 
 /* pasing */
 t_token     *dollar_pars(t_token *list_token);
+t_token		*dollar_exit_status(t_token *list_token);
 int			check_str(char *str1, char *str2);
 t_table_cmd *parser(t_token *list_token);
 
@@ -115,7 +117,10 @@ void executor(t_table_cmd *table);
 
 /* builtin */
 int	echo(t_table_cmd *table);
+int	pwd(void);
 int cd(t_table_cmd *table);
+int env(void);
+//int export_fun(void);
 
 /* для тестов*/
 void	print_list_token(t_token *list_token);

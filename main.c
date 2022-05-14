@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 12:55:00 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/10 13:47:56 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/14 17:06:01 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int main()
 	t_table_cmd *table;
 
 	env_init();
+	g_envp.status_exit = EXIT_SUCCESS;
 	all_signals();
 	rl_outstream = stderr;
 	while (1)
@@ -50,7 +51,6 @@ int main()
 		add_history(line);
 		list_token = lexer(line);
 		//print_list_token(list_token);
-		list_token = dollar_pars(list_token);
 		//print_list_token(list_token);
 		table = parser(list_token);
 		executor(table);
