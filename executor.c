@@ -109,14 +109,14 @@ void run_builtin(t_table_cmd *table)
 		g_envp.status_exit= cd(table);
 	if (check_str(table->arguments[0], "pwd"))
 		g_envp.status_exit = pwd();
-	// if (check_str(table->commands->arguments[0], "export"))
-	// 	g_envp.status_exit = export_fun();
-	// if (check_str(table->commands->arguments[0], "unset"))
-	// 	g_envp.status_exit = unset(table);
+	if (check_str(table->arguments[0], "export"))
+		g_envp.status_exit = export_fun(table);
+	if (check_str(table->arguments[0], "unset"))
+		g_envp.status_exit = unset_fun(table);
 	if (check_str(table->arguments[0], "env"))
 		g_envp.status_exit = env();
-	// if (check_str(table->commands->arguments[0], "exit"))
-	// 	g_envp.status_exit = exit(table);
+	if (check_str(table->arguments[0], "exit"))
+		g_envp.status_exit = exit_prog();
 }
 
 /* void execute_redirect(t_table_cmd *table)

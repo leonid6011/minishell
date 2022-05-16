@@ -148,13 +148,13 @@ void inout_add_to_table(t_token **list_token, t_table_cmd **table)
 t_table_cmd *parser(t_token *list_token)
 {
 	t_table_cmd	*table;
-	t_table_cmd	*head;
+	//t_table_cmd	*head;
 	t_token		*tmp;
 	
 	table = table_create();
 	if (table == NULL)
 		return (NULL);
-	head = table;
+	//head = table;
 	while (list_token)
 	{
 		if (list_token->key == e_word || list_token->key == e_single_quote || list_token->key == e_double_quote)

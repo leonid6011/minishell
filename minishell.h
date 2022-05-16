@@ -67,8 +67,8 @@ typedef struct s_redir
 {
 	// t_token				*arguments;
 	// заменил структуру на массив строк для экзекьютура
-	char				*name;
-	int					type;
+	char			*name;
+	int				type;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -81,7 +81,11 @@ typedef struct s_table_cmd
 
 t_info	g_envp;
 
-void env_init(void);
+/* env */
+void		env_init(void);
+t_env_var	*envlist_new(char *key, char *value);
+void		envlist_add_back(t_env_var **lst, t_env_var *new);
+
 
 /* tokens */
 t_token	*token_new(key_token key, char *value);
@@ -93,7 +97,7 @@ void	del_elem(t_token *del, t_token *head); //для удаления токен
 /* lexer */
 int     ft_quotelen(char *str);
 int     ft_wordlen(char *str);
-void find_duplicate_flags(t_token **list_token); // для исключения повторяющихся флагов
+void	find_duplicate_flags(t_token **list_token); // для исключения повторяющихся флагов
 int     lexer_token_whitespace(char *input, int *i, t_token **list_token);
 int     lexer_token_pipe(char *input, int *i, t_token **list_token);
 int     lexer_token_bracket(char *input, int *i, t_token **list_token);
@@ -117,10 +121,12 @@ void executor(t_table_cmd *table);
 
 /* builtin */
 int	echo(t_table_cmd *table);
-int	pwd(void);
 int cd(t_table_cmd *table);
+int	pwd(void);
+int export_fun(t_table_cmd *table);
+int	unset_fun(t_table_cmd *table);
 int env(void);
-//int export_fun(void);
+int exit_prog(void);
 
 /* для тестов*/
 void	print_list_token(t_token *list_token);

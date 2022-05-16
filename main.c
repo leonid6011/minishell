@@ -56,4 +56,5 @@ int main()
 		executor(table);
 		free(line);
 	}
+	exit (1);
 }
