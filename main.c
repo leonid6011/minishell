@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 12:55:00 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/14 17:06:01 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/19 15:16:52 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int main()
 	{
 		line = readline("minishell$> ");
 		if (!line)
-			print_exit();
+			exit_prog();
 		add_history(line);
 		list_token = lexer(line);
 		//print_list_token(list_token);

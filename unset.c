@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/19 15:19:47 by echrysta          #+#    #+#             */
+/*   Updated: 2022/05/19 15:48:28 by echrysta         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_env_var	*del_elem_env(t_env_var *del, t_env_var *head)
@@ -40,13 +52,35 @@ int	unset_fun(t_table_cmd *table)
 {
 	t_env_var	*env_list;
 	int			i;
+	int			exit_status;
+	int			flag_print_err;
+	int			j;
 	
+	flag_print_err = 0;
 	env_list = g_envp.env_list;
 	i = 1;
 	while (table->arguments[i])
 	{
-		del_add_elem_env(table->arguments[i], env_list);
+		j = 0;
+		while (table->arguments[i][j])
+		{
+			if (ft_isalnum(table->arguments[i][j]) == 0)
+			{
+				exit_status = EXIT_FAILURE;
+				flag_print_err = 1;
+			}
+			j++;
+		}
+		if (flag_print_err)
+		{
+			ft_putstr_fd("unset: ", 2);
+			ft_putstr_fd(table->arguments[i], 2);
+			ft_putstr_fd(": invalid parameter name\n", 2);
+			flag_print_err = 0;
+		}
+		else
+			del_add_elem_env(table->arguments[i], env_list);
 		i++;
 	}
-    return (EXIT_SUCCESS);
+    return (exit_status);
 }

@@ -6,13 +6,13 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:33:46 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/14 14:48:10 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/19 15:07:38 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_list_token(t_token *list_token)
+void	print_list_token(t_token *list_token) // потом убрать
 {
 	t_token *tmp;
 
@@ -31,7 +31,9 @@ void	print_list_env(t_env_var *list_token)
 	tmp = list_token;
 	while (tmp)
 	{
-		printf("%s%s\n", tmp->key, tmp->value);
+		ft_putstr_fd(tmp->key, 1);
+		ft_putstr_fd(tmp->value, 1);
+		ft_putchar_fd('\n', 1);
 		tmp = tmp->next;
 	}
 }

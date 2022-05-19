@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:33:40 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/14 18:39:41 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/19 15:58:23 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ t_token	*dollar_pars(t_token *list_token)
 		{
 			if (value_tmp[i] == '$')
 			{
-				printf("lol\n");
+				//printf("lol\n");
 				value_tmp = change_dollar_token(value_tmp, i);
 				tmp->value = value_tmp;
 			}

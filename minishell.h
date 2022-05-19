@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 12:48:34 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/14 18:03:12 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/05/19 15:09:59 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@
 
 typedef struct s_env_var
 {
-	char	            *key;
-	char	            *value;
+	char				*key;
+	char				*value;
 	struct s_env_var	*next;
 }	t_env_var;
 
 typedef struct s_info
 {
-	char	    **env;
+	char		**env;
 	t_env_var	*env_list;
-	int		    status_exit;
+	int			status_exit;
 }	t_info;
 
 typedef enum e_key_token
@@ -95,41 +95,41 @@ void	token_destroy_all(t_token *token);
 void	del_elem(t_token *del, t_token *head); //для удаления токена
 
 /* lexer */
-int     ft_quotelen(char *str);
-int     ft_wordlen(char *str);
+int		ft_quotelen(char *str);
+int		ft_wordlen(char *str);
 void	find_duplicate_flags(t_token **list_token); // для исключения повторяющихся флагов
-int     lexer_token_whitespace(char *input, int *i, t_token **list_token);
-int     lexer_token_pipe(char *input, int *i, t_token **list_token);
-int     lexer_token_bracket(char *input, int *i, t_token **list_token);
-int     lexer_token_redir(char *input, int *i, t_token **list_token);
-int     lexer_token_quote(char *input, int *i, t_token **list_token);
-int     lexer_token_word(char *input, int *i, t_token **list_token);
-t_token *lexer(char *input);
+int		lexer_token_whitespace(char *input, int *i, t_token **list_token);
+int		lexer_token_pipe(char *input, int *i, t_token **list_token);
+int		lexer_token_bracket(char *input, int *i, t_token **list_token);
+int		lexer_token_redir(char *input, int *i, t_token **list_token);
+int		lexer_token_quote(char *input, int *i, t_token **list_token);
+int		lexer_token_word(char *input, int *i, t_token **list_token);
+t_token	*lexer(char *input);
 
 /* signal */
 void	sig_prog(int sig);
 void	all_signals(void);
 
-/* pasing */
-t_token     *dollar_pars(t_token *list_token);
+	/* pasing */
+t_token		*dollar_pars(t_token *list_token);
 t_token		*dollar_exit_status(t_token *list_token);
 int			check_str(char *str1, char *str2);
-t_table_cmd *parser(t_token *list_token);
+t_table_cmd	*parser(t_token *list_token);
 
 /* executor */
 void executor(t_table_cmd *table);
 
 /* builtin */
-int	echo(t_table_cmd *table);
-int cd(t_table_cmd *table);
-int	pwd(void);
-int export_fun(t_table_cmd *table);
-int	unset_fun(t_table_cmd *table);
-int env(void);
-int exit_prog(void);
+int		echo(t_table_cmd *table);
+int		cd(t_table_cmd *table);
+int		pwd(void);
+int		export_fun(t_table_cmd *table);
+int		unset_fun(t_table_cmd *table);
+int 	env(void);
+void	print_list_env(t_env_var *list_token);
+int		exit_prog(void);
 
 /* для тестов*/
 void	print_list_token(t_token *list_token);
-void	print_list_env(t_env_var *list_token);
 
 #endif
