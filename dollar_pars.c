@@ -66,7 +66,7 @@ int	correct_count(char *elem_split_value)
 	int i;
 
 	i = 0;
-	while (elem_split_value[i] && elem_split_value[i] != '\'' && elem_split_value[i] != '$' && elem_split_value[i] != ' ' && elem_split_value[i] != '\"')
+	while (elem_split_value[i] && elem_split_value[i] != '\'' && elem_split_value[i] != '$' && elem_split_value[i] != ' ' && elem_split_value[i] != '\"' && elem_split_value[i] != '/')
 	{
 		i++;
 	}
@@ -195,7 +195,6 @@ t_token	*dollar_pars(t_token *list_token)
 		{
 			if (tmp->value[i] == '$')
 			{
-				//printf("lol\n");
 				change_value = change_in_env(tmp->value);
 				if (check_str(change_value, tmp->value) && change_value[0] != '\"' && check_asc(change_value))
 				{
