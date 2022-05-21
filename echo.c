@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:54:32 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/21 16:05:43 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/21 20:27:01 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	all_n(char *argm)
 {
 	int i;
 
+	i = 0;
 	if (argm[0] == '-' && ft_strlen(argm) == 1)
 		return (0);
 	argm++;
@@ -56,18 +57,37 @@ int	echo(t_table_cmd *table)
 	n_flag = 0;
 	if (check_str(table->arguments[1], "-n") && all_n(table->arguments[1]))
 		n_flag = 1;
+	
 	nbr_arguments = nbr_argc(table, n_flag);
+	printf("NBR = %d\n", nbr_arguments);
 	i = 1;
-	if (n_flag == 1)
-		i = 2;
+	while (table->arguments[i])
+	{
+		if (!check_str(table->arguments[i], "-n"))
+			break;
+		printf("table->arguments[i] = %s\n", table->arguments[i]);
+		i++;
+	}
+	i--;
+	printf("i = %d\n", i);
+	// i = 1;
+	// if (n_flag == 1)
+	// 	i = 2;
 	// if (!table->arguments[i])
 	// 	ft_putstr_fd("\n", STDOUT_FILENO);
+	nbr_arguments = nbr_arguments - i;
+	printf("nbr_arguments = %d\n", nbr_arguments);
+	printf("table->arguments[i] = %s\n", table->arguments[i]);
+	printf("flag = %d\n", n_flag);
 	while (table->arguments[i])
 	{
 		ft_putstr_fd(table->arguments[i], STDOUT_FILENO);
 		nbr_arguments--;
 		if (nbr_arguments != 0)
+		{
 			ft_putchar_fd(' ', STDOUT_FILENO);
+			printf("lol\n");
+		}
 		if (nbr_arguments == 0)
 		{
 			if (n_flag == 0)
