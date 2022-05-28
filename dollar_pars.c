@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_pars.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:33:40 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/21 18:20:53 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/05/28 19:15:48 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,25 @@ t_token	*del_elem_list(t_token *del, t_token *head)
 	t_token	*tmp;
 
 	tmp = head;
+	//print_list_token(head);
 	if (head == del)
 	{
-		tmp = tmp->next;
-		head->value = tmp->value;
-		head->key = tmp->key;
-		head->next = tmp->next;
-		free(tmp);
-		return (head);
+		if (tmp->next)
+		{
+			tmp = tmp->next;
+			head->value = tmp->value;
+			head->key = tmp->key;
+			head->next = tmp->next;
+			free(tmp);
+			return (head);
+		}
+		else
+		{
+			free(tmp->value);
+			free(tmp->next);
+			free(tmp);
+			return (head);
+		}
 	}
 	while (tmp->next != del)
 		tmp = tmp->next;
@@ -66,7 +77,7 @@ int	correct_count(char *elem_split_value)
 	int i;
 
 	i = 0;
-	while (elem_split_value[i] && elem_split_value[i] != '\'' && elem_split_value[i] != '$' && elem_split_value[i] != ' ' && elem_split_value[i] != '\"' && elem_split_value[i] != '/')
+	while (elem_split_value[i] && elem_split_value[i] != '\'' && elem_split_value[i] != '$' && elem_split_value[i] != ' ' && elem_split_value[i] != '\"' && elem_split_value[i] != '/' && elem_split_value[i] != '=')
 	{
 		i++;
 	}
@@ -79,6 +90,7 @@ char	*change_value(char *value, char *old_value, int len_sp_val, char *env_value
 	int		c_new_val;
 	int		i;
 
+	//printf("do change val = %s\n", old_value);
 	env_value++;
 	c_new_val = 0;
 	while (old_value[c_new_val] != '$')
@@ -111,9 +123,63 @@ char	*change_value(char *value, char *old_value, int len_sp_val, char *env_value
 	new_value[i] = '\0';
 	new_value = ft_strjoin(new_value, env_value);
 	new_value = ft_strjoin(new_value, value);
-	// printf("NEW VAL = %s\n", new_value);
+	//printf("NEW VAL = %s\n", new_value);
 	// printf("c_new_val = %d\n", c_new_val);
 	return (new_value);
+}
+
+char	*digit_arg_dol(char *value, char *old_value)
+{
+	char	*new_val;
+	int		i;
+	int		count;
+	int		all_len;
+	
+	all_len = ft_strlen(old_value);
+	count = all_len - correct_count(value) - 1;
+	new_val = (char *)malloc(sizeof(char) * count);
+	i = 0;
+	while (old_value[i] != '$')
+	{
+		new_val[i] = old_value[i];
+		i++;
+	}
+	new_val[i] = '\0';
+	value++;
+	new_val = ft_strjoin(new_val, value);
+	//printf("str = %s\n", new_val);
+	return(new_val);
+}
+
+char *del_posle_dol(char *old_value, char *value)
+{
+	char	*new_val;
+	int		i;
+	int		count;
+	int		all_len;
+	char	*ost;
+	
+	all_len = ft_strlen(old_value);
+	count = all_len - correct_count(value) - 1;
+	new_val = (char *)malloc(sizeof(char) * count);
+	i = 0;
+	while (old_value[i] != '$')
+	{
+		new_val[i] = old_value[i];
+		i++;
+	}
+	new_val[i] = '\0';
+	ost = value;
+	i = 0;
+	while (i != correct_count(value))
+	{
+		ost++;
+		i++;
+	}
+	//printf("str do = %s\n", ost);
+	new_val = ft_strjoin(new_val, ost);
+	//printf("str = %s\n", new_val);
+	return(new_val);
 }
 
 char	*change_in_env(char *value)
@@ -131,7 +197,6 @@ char	*change_in_env(char *value)
 	old_value = value;
 	if (value[0] == '\"')
 		return(old_value);
-	//printf("value = %s\n", value);
 	while (value[0] != '$')
 	{
 		value++;
@@ -140,23 +205,34 @@ char	*change_in_env(char *value)
 	value++;
 	//printf("value++ = %s\n", value);
 	env = g_envp.env_list;
+	//printf("value = %s\n", value);
+	//printf("old value = %s\n", old_value);
+	if (ft_isdigit(value[0]))
+	{
+		return(digit_arg_dol(value, old_value));
+	}
 	while (env)
 	{
 		len_env = ft_strlen(env->key);
 		len_sp_val = correct_count(value);
-		// printf("len_env = %d\n", len_env);
-		// printf("len_sp_val = %d\n", len_sp_val);
+		//printf("len_env = %d\n", len_env);
+		//printf("len_sp_val = %d\n", len_sp_val);
 		if (check_str_n(env->key, value, len_sp_val) && len_env == len_sp_val)
 		{
 			new_value = change_value(value, old_value, len_sp_val, env->value);
-			yes_flag = 1;
+			//printf("NEW = %s\n", new_value);
+			return (new_value);
 		}
 	env = env->next;
 	}
-	if (yes_flag == 1)
+	if (ft_isalpha(value[0]))
+	{
+		new_value = del_posle_dol(old_value, value);
 		return (new_value);
-	else
-		return (old_value);
+	}
+	//printf("NEW2 = %s\n", new_value);
+	//printf("old_val  = %s\n", old_value);
+	return (old_value);
 }
 
 int	check_asc(char *change_value)
@@ -182,6 +258,12 @@ int	check_asc(char *change_value)
 		return (1);
 }
 
+int	alone_dollar(char *str)
+{
+	printf("str = %s\n", str);
+	return (1);
+}
+
 t_token	*dollar_pars(t_token *list_token)
 {
 	t_token	*tmp;
@@ -193,25 +275,31 @@ t_token	*dollar_pars(t_token *list_token)
 	while (tmp)
 	{
 		i = 0;
-		while (tmp->value[i])
+		//printf("tmp = %s\n", tmp->value);
+		if (tmp->key != e_single_quote)
 		{
-			if (tmp->value[i] == '$')
+			while (tmp->value[i])
 			{
-				change_value = change_in_env(tmp->value);
-				if (check_str(change_value, tmp->value) && change_value[0] != '\"' && check_asc(change_value))
+				if (tmp->value[i] == '$')
 				{
-					// printf("NUZNO UDALIT\n");
-					// printf("change_value %s\n", change_value);
-					tmp = del_elem_list(tmp, tmp);
+					//printf(" do change_value = %s\n", tmp->value);
+					change_value = change_in_env(tmp->value);
+					//printf("posle change_value = %s\n", change_value);
+					if (check_str(tmp->value, change_value) && ft_strlen(tmp->value) == ft_strlen(change_value) && change_value[0] != '\"' && check_asc(change_value) && tmp->key != e_double_quote)
+					{
+						//printf("NUZNO UDALIT\n");
+						tmp = del_elem_list(tmp, list_token);
+					}
+					else
+					{
+						tmp->value = change_value;
+					}
 				}
-				else
-				{
-					tmp->value = change_value;
-				}
+				i++;
 			}
-			i++;
 		}
 		tmp = tmp->next;
 	}
+	//print_list_token(list_token);
 	return(list_token);
 }

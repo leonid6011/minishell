@@ -6,22 +6,19 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:54:32 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/21 20:27:01 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/28 19:15:26 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	nbr_argc(t_table_cmd *table, int n_flag)
+int	nbr_argc(t_table_cmd *table)
 {
 	int nbr;
 
 	nbr = 0;
 	while(table->arguments[nbr])
 		nbr++;
-	if (n_flag == 1)
-		nbr--;
-	nbr--;
 	return (nbr);
 }
 
@@ -47,38 +44,47 @@ int	echo(t_table_cmd *table)
 	int	n_flag;
 	int	nbr_arguments;
 	int	i;
+	int j;
 
-	//print_list_arguments(table->arguments);
 	if (!table->arguments[1])
 	{
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		return (EXIT_SUCCESS);
 	}
-	n_flag = 0;
-	if (check_str(table->arguments[1], "-n") && all_n(table->arguments[1]))
-		n_flag = 1;
-	
-	nbr_arguments = nbr_argc(table, n_flag);
-	printf("NBR = %d\n", nbr_arguments);
-	i = 1;
-	while (table->arguments[i])
+	if (table->arguments[1][0] == '\0')
 	{
-		if (!check_str(table->arguments[i], "-n"))
-			break;
-		printf("table->arguments[i] = %s\n", table->arguments[i]);
-		i++;
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		return (EXIT_SUCCESS);
 	}
-	i--;
-	printf("i = %d\n", i);
-	// i = 1;
-	// if (n_flag == 1)
-	// 	i = 2;
-	// if (!table->arguments[i])
-	// 	ft_putstr_fd("\n", STDOUT_FILENO);
+	n_flag = 0;
+	i = 1;
+	j = 1;
+	while (table->arguments[j] && check_str(table->arguments[j], "-n"))
+	{
+		if (check_str(table->arguments[j], "-n") && all_n(table->arguments[1]))
+		{
+			n_flag = 1;
+			i++;
+		}
+		j++;
+	}
+	j = 0;
+	while (table->arguments[j])
+	{
+		if (!check_str(table->arguments[j], "-n"))
+		{
+			break;	
+		}
+		j++;
+	}
+	i = i + j;
+	nbr_arguments = nbr_argc(table);
 	nbr_arguments = nbr_arguments - i;
-	printf("nbr_arguments = %d\n", nbr_arguments);
-	printf("table->arguments[i] = %s\n", table->arguments[i]);
-	printf("flag = %d\n", n_flag);
+	// printf("j = %d\n", j);
+	// print_list_arguments(table->arguments);
+	// printf("nbr_arguments = %d\n", nbr_arguments);
+	// printf("n_flag = %d\n", n_flag);
+	// printf("i = %d\n", i);
 	while (table->arguments[i])
 	{
 		ft_putstr_fd(table->arguments[i], STDOUT_FILENO);
@@ -86,7 +92,6 @@ int	echo(t_table_cmd *table)
 		if (nbr_arguments != 0)
 		{
 			ft_putchar_fd(' ', STDOUT_FILENO);
-			printf("lol\n");
 		}
 		if (nbr_arguments == 0)
 		{
