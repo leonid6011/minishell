@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:33:40 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/28 19:15:48 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/29 13:19:52 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,14 +285,14 @@ t_token	*dollar_pars(t_token *list_token)
 					//printf(" do change_value = %s\n", tmp->value);
 					change_value = change_in_env(tmp->value);
 					//printf("posle change_value = %s\n", change_value);
-					if (check_str(tmp->value, change_value) && ft_strlen(tmp->value) == ft_strlen(change_value) && change_value[0] != '\"' && check_asc(change_value) && tmp->key != e_double_quote)
+					if (change_value[0] == '\0')
 					{
 						//printf("NUZNO UDALIT\n");
 						tmp = del_elem_list(tmp, list_token);
 					}
 					else
 					{
-						tmp->value = change_value;
+							tmp->value = change_value;
 					}
 				}
 				i++;
