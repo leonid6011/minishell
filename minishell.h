@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 12:48:34 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/29 13:58:57 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/29 14:46:49 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,9 @@ char		*digit_arg_dol(char *value, char *old_value);
 int			correct_count(char *elem_split_value);
 int			check_str_n(char *str1, char *str2, int n);
 t_token		*del_elem_list(t_token *del, t_token *head);
+
+/* expand_prog */
+t_token	*expand_prog(t_token *list_token);
 
 /* executor */
 void executor(t_table_cmd *table);

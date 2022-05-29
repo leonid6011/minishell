@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/29 13:58:29 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/29 14:39:26 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/29 15:27:35 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,11 @@ char	*change_in_env(char *value)
 	int			len_env;
 	int			len_sp_val;
 
+	env = g_envp.env_list;
 	old_value = value;
 	if (value[0] == '\"')
 		return (old_value);
 	value = change_in_env_help(value);
-	env = g_envp.env_list;
 	if (ft_isdigit(value[0]))
 		return (digit_arg_dol(value, old_value));
 	while (env)
