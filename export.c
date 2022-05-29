@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 14:55:40 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/21 18:10:42 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/29 19:42:19 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,22 @@ static t_env_var	*envlist_new_alone(char	*key)
 static int	check_argc(char *str)
 {
 	char ch;
+	int	i;
 
-	ch = str[0];
-	if (!(97 <= ch && ch <= 122) && !(65 <= ch && ch <= 90))
+	i = 0;
+	//printf("str = %s\n", str);
+	while (str[i] != '=' && str[i])
 	{
-		ft_putstr_fd("zhs: export: '", 2);
-		ft_putstr_fd(str, 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
-		return (EXIT_FAILURE);
+		ch = str[i];
+		if (!(97 <= ch && ch <= 122) && !(65 <= ch && ch <= 90) && !(48 <= ch && ch <= 57))
+		{
+			ft_putstr_fd("zhs: export: '", 2);
+			ft_putstr_fd(str, 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			//printf("CHAR = %c\n", str[i]);
+			return (EXIT_FAILURE);
+		}
+		i++;
 	}
 	return (EXIT_SUCCESS);
 }
