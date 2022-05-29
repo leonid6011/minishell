@@ -6,7 +6,7 @@
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:54:32 by echrysta          #+#    #+#             */
-/*   Updated: 2022/05/28 19:15:26 by echrysta         ###   ########.fr       */
+/*   Updated: 2022/05/29 13:57:56 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,7 @@ int	echo(t_table_cmd *table)
 	while (table->arguments[j])
 	{
 		if (!check_str(table->arguments[j], "-n"))
-		{
 			break;	
-		}
 		j++;
 	}
 	i = i + j;
@@ -90,9 +88,7 @@ int	echo(t_table_cmd *table)
 		ft_putstr_fd(table->arguments[i], STDOUT_FILENO);
 		nbr_arguments--;
 		if (nbr_arguments != 0)
-		{
 			ft_putchar_fd(' ', STDOUT_FILENO);
-		}
 		if (nbr_arguments == 0)
 		{
 			if (n_flag == 0)

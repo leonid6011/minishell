@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 12:48:34 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/21 14:27:36 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/05/29 13:58:57 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,22 @@ t_token	*lexer(char *input);
 void	sig_prog(int sig);
 void	all_signals(void);
 
-	/* pasing */
+/* pasing */
+t_table_cmd	*parser(t_token *list_token);
+
+/* dollar_pars */
 t_token		*dollar_pars(t_token *list_token);
 t_token		*dollar_exit_status(t_token *list_token);
+char		*digit_arg_dol(char *value, char *old_value);
 int			check_str(char *str1, char *str2);
-t_table_cmd	*parser(t_token *list_token);
+char		*change_in_env(char *value);
+char		*change_value(char *value, char *old, int len_sp_val, char *env_value);
+int			check_asc(char *change_value);
+char 		*del_posle_dol(char *old_value, char *value);
+char		*digit_arg_dol(char *value, char *old_value);
+int			correct_count(char *elem_split_value);
+int			check_str_n(char *str1, char *str2, int n);
+t_token		*del_elem_list(t_token *del, t_token *head);
 
 /* executor */
 void executor(t_table_cmd *table);

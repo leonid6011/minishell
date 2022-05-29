@@ -6,7 +6,7 @@
 #    By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/04 15:40:50 by mbutter           #+#    #+#              #
-#    Updated: 2022/05/19 16:17:37 by echrysta         ###   ########.fr        #
+#    Updated: 2022/05/29 13:59:14 by echrysta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,8 @@ SRCS		=	main.c \
 				lexer.c\
 				signal.c\
 				dollar_pars.c\
+				dollar_pars_2.c\
+				dollar_pars_3.c\
 				dollar_exit_status.c\
 				parser.c \
 				executor.c \
