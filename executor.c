@@ -6,7 +6,7 @@
 /*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/08 15:26:46 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/29 16:27:57 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/05/31 20:48:35 by mbutter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void exec_pipe(t_table_cmd *table)
 			return ;
 		if (proc_id == 0)
 		{
+			//printf("lol\n");
 			//if (table->next != NULL)
 			if (pipe_flag == 1)
 			{
@@ -123,6 +124,7 @@ void exec_pipe(t_table_cmd *table)
 			if (check_builtin(table))
 			{
 				run_builtin(table);
+				exit(EXIT_SUCCESS);
 			}
 			else
 			{
