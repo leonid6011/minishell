@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 15:12:52 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/31 20:35:50 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/06/04 15:34:25 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,5 @@ void run_builtin(t_table_cmd *table)
 	if (check_str(table->arguments[0], "env"))
 		g_envp.status_exit = env();
 	if (check_str(table->arguments[0], "exit"))
-		exit_prog(table);
+		g_envp.status_exit = exit_prog(table);
 }
