@@ -48,5 +48,5 @@ void run_builtin(t_table_cmd *table)
 	if (check_str(table->arguments[0], "env"))
 		g_envp.status_exit = env();
 	if (check_str(table->arguments[0], "exit"))
-		g_envp.status_exit = exit_prog(table);
+		exit_prog(table);
 }

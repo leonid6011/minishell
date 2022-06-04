@@ -86,7 +86,7 @@ typedef struct s_table_cmd
 	struct s_table_cmd	*next;
 }	t_table_cmd;
 
-t_info	g_envp;
+extern t_info	g_envp;
 
 /* env */
 void		env_init(void);
@@ -156,7 +156,7 @@ int		export_fun(t_table_cmd *table);
 int		unset_fun(t_table_cmd *table);
 int 	env(void);
 void	print_list_env(t_env_var *list_token);
-int		exit_prog(t_table_cmd *table);
+void	exit_prog(t_table_cmd *table);
 
 /* utils */
 void	arr_free(char **arr);

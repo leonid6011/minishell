@@ -28,7 +28,8 @@ t_token	*del_elem_list(t_token *del, t_token *head)
 
 	tmp = head;
 	if (head == del)
-	{
+	{	
+		
 		if (tmp->next)
 			return (del_elem_list_help(tmp, head));
 		else
@@ -43,7 +44,7 @@ t_token	*del_elem_list(t_token *del, t_token *head)
 		tmp = tmp->next;
 	tmp->next = del->next;
 	free (del);
-	return (tmp);
+	return (head);
 }
 
 char	*change_in_env_help(char *value)

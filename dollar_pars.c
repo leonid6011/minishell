@@ -96,7 +96,7 @@ t_token	*dollar_pars(t_token *list_token)
 	int		i;
 
 	prev = NULL;
-	print_list_token(list_token);
+	//print_list_token(list_token);
 	tmp = list_token;
 	while (tmp)
 	{
@@ -117,6 +117,6 @@ t_token	*dollar_pars(t_token *list_token)
 		prev = tmp->value;
 		tmp = tmp->next;
 	}
-	print_list_token(list_token);
+	//print_list_token(list_token);
 	return (list_token);
 }
