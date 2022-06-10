@@ -6,33 +6,27 @@
 /*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 16:07:01 by mbutter           #+#    #+#             */
-/*   Updated: 2022/06/04 20:52:39 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/06/09 21:16:36 by mbutter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int open_file(t_redir *redir)
+char	*change_in_env(char *value, int flag_ex);
+
+int	open_file(t_redir *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = -1;
 	if (redir->type == REDIR_IN)
-		fd = open(redir->name, O_RDONLY);
+		redir->fd = open(redir->name, O_RDONLY);
 	else if (redir->type == REDIR_OUT)
-		fd = open(redir->name, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		redir->fd = open(redir->name, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	else if (redir->type == REDIR_APPEND)
-		fd = open(redir->name, O_CREAT | O_RDWR | O_APPEND, 0644);
-	if (fd < 0)
-	{
+		redir->fd = open(redir->name, O_CREAT | O_RDWR | O_APPEND, 0644);
+	if (redir->fd < 0)
 		return (-1);
-	}
-	if (redir->type == REDIR_IN)
-		dup2(fd, STDIN_FILENO);
-	else
-	{
-		dup2(fd, STDOUT_FILENO);
-	}
 	return (0);
 }
 
@@ -40,98 +34,85 @@ void	heredoc_util(int *fd, t_redir *redir)
 {
 	char	*line;
 	char	*tmp;
-	int		quote_flag;
-	char	*limiter;
-	
-	quote_flag = 0;
-	limiter = redir->name;
-	if (redir->name[0] == '"')
-	{
-		limiter += 1;
-		quote_flag = 1;
-	}
+
 	while (1)
 	{
-		//write(1, "> ", 2);
-		//line = get_next_line(STDIN_FILENO);
 		line = readline("> ");
-		if (ft_strncmp(line, limiter, ft_strlen(line) - 1) == 0)
+		if (!line || !ft_strncmp(line, redir->name, ft_strlen(line) + 1))
 		{
 			free(line);
-			close(fd[1]);
-			exit(EXIT_SUCCESS);
+			if (!line)
+				write(1, "\n", 1);
+			break ;
 		}
 		tmp = line;
-		if (quote_flag == 0)
-			tmp = change_in_env(tmp, 0);
+		/* if (redir->quote_flag == 0)
+			tmp = change_in_env(tmp, 0); */
 		line = ft_strjoin(tmp, "\n");
-		write(fd[1], line, ft_strlen(line));
+		ft_putstr_fd(line, *fd);
 		free(line);
 		free(tmp);
 	}
 }
 
-void heredoc(t_redir *redir)
+int	init_heredoc(char **filename, int *fd)
 {
-/* 	char	*line;
-	char	*tmp; */
-	int		pid;
-	int		fd[2];
-
-	if (pipe(fd) == -1)
-		return ; //!!!make return error!!!
-	pid = fork();
-	if (pid < 0)
-		return ; //!!!make return error!!!
-	if (pid == 0)
+	*filename = ft_strdup(".heredoc_tmp");
+	*fd = open(*filename, O_CREAT | O_APPEND | O_RDWR, 0600);
+	if (*fd == -1)
 	{
-		close(fd[0]);
-		//dup2(fd[1], STDOUT_FILENO);
-		heredoc_util(fd, redir);
-		/* while (1)
-		{
-			//write(1, "> ", 2);
-			//line = get_next_line(STDIN_FILENO);
-			line = readline("> ");
-			if (ft_strncmp(line, redir->name, ft_strlen(line) - 1) == 0)
-			{
-				free(line);
-				close(fd[1]);
-				exit(EXIT_SUCCESS);
-			}
-			tmp = line;
-			tmp = change_in_env(tmp, 0);
-			line = ft_strjoin(tmp, "\n");
-			write(fd[1], line, ft_strlen(line));
-			free(line);
-			free(tmp);
-		} */
+		unlink(*filename);
+		print_error("minishell", "heredoc", strerror(errno), *filename);
+		free(*filename);
+		*filename = NULL;
+		return (EXIT_FAILURE);
 	}
-	waitpid(pid, NULL, 0);
-	close(fd[1]);
-	dup2(fd[0], STDIN_FILENO);
-	close(fd[0]);
+	return (EXIT_SUCCESS);
 }
 
-void execute_redirect(t_table_cmd *table)
+void	heredoc(t_redir **redir)
 {
-	t_redir *redir_file;
+	char	*filename;
+
+	if (init_heredoc(&filename, &(*redir)->fd))
+		return ;
+	heredoc_util(&(*redir)->fd, *redir);
+	close((*redir)->fd);
+	(*redir)->fd = open(filename, O_RDONLY);
+	(*redir)->type = REDIR_IN;
+	unlink(filename);
+	free(filename);
+	filename = NULL;
+}
+
+int	execute_redirect(t_table_cmd *table)
+{
+	t_redir	*redir_file;
 
 	redir_file = table->redirections;
 	while (redir_file != NULL)
 	{
 		if (redir_file->type == 4)
-		{
-			heredoc(redir_file);
-		}
+			heredoc(&redir_file);
 		else
 		{
 			if (open_file(redir_file) == -1)
 			{
-				return ;
+				print_error("minishell", NULL, "no such file or directory",
+					redir_file->name);
+				return (1);
 			}
 		}
-		//printf("1\n");
 		redir_file = redir_file->next;
 	}
+	redir_file = table->redirections;
+	while(redir_file != NULL)
+	{
+		if (redir_file->type == REDIR_IN)
+			dup2(redir_file->fd, STDIN_FILENO);
+		else
+			dup2(redir_file->fd, STDOUT_FILENO);
+		redir_file = redir_file->next;
+	}
+	return (0);
 }

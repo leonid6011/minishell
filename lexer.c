@@ -3,40 +3,67 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 14:14:14 by mbutter           #+#    #+#             */
-/*   Updated: 2022/05/31 20:48:41 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/06/10 21:05:14 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int check_syntax(t_token *list_token)
+static int syntax_error(t_token *list_token)
 {
+	if (list_token->key == e_pipe && list_token->next == NULL)
+		return (print_error("minishell", "syntax error", NULL,
+				"incomplete pipe"));
+	if (list_token->key == e_pipe && list_token->next->key == e_pipe)
+		return (print_error("minishell", "syntax error", NULL,
+				"incomplete pipe"));
+	if (list_token->key == e_redir && list_token->next == NULL)
+		return (print_error("minishell", "syntax error", NULL,
+				"invalid redirection"));
+	if (list_token->key == e_redir && list_token->next->key == e_redir)
+		return (print_error("minishell", "syntax error", NULL,
+				"invalid redirection"));
+	if (list_token->key == e_redir && list_token->next->key == e_pipe)
+		return (print_error("minishell", "syntax error", NULL,
+				"invalid redirection"));
+	return (0);
+}
+
+static int	check_syntax(t_token *list_token)
+{
+	int empty_flag;
+	int err_flag;
+
+	empty_flag = 1;
+	err_flag = 0;
 	if (list_token && list_token->key == e_pipe)
 		return (-1);
 	while (list_token)
 	{
-		if (list_token->key == e_pipe && list_token->next == NULL)
-			return (-1);
+		if (syntax_error(list_token))
+		{
+			err_flag = 1;
+			break ;
+		}
+		list_token = list_token->next;
 	}
-	return (0);
+	return (err_flag);
 }
 
-t_token *lexer(char *input)
+t_token	*lexer(char *input)
 {
 	t_token	*list_token;
 	int		i;
 
 	i = 0;
 	list_token = NULL;
-	if (input[0] == 0) //без этой проверки вылетает сега
-		return (list_token);	
+	if (input[0] == 0)
+		return (list_token);
 	while (input[i])
 	{
-		/* if (lexer_token_whitespace(input, &i, &list_token) == 1)
-			break ; */
 		if (lexer_token_pipe(input, &i, &list_token) == 1)
 			break ;
 		if (lexer_token_bracket(input, &i, &list_token) == 1)
@@ -50,13 +77,13 @@ t_token *lexer(char *input)
 		while (input[i] && ft_isspace(input[i]))
 			i++;
 	}
-	
 	list_token = dollar_exit_status(list_token);
-	
 	list_token = dollar_pars(list_token);
-	
 	list_token = expand_prog(list_token);
-	if (input[i] != '\0' && check_syntax(list_token))
-		token_destroy_all(list_token);
+	if (input[i] != '\0' || check_syntax(list_token))
+	{
+		token_destroy_all(&list_token);
+		g_envp.status_exit = 2;
+	}
 	return (list_token);
 }

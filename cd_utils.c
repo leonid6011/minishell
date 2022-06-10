@@ -1,54 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_list_token.c                                 :+:      :+:    :+:   */
+/*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/03 17:33:46 by echrysta          #+#    #+#             */
-/*   Updated: 2022/06/05 17:33:16 by echrysta         ###   ########.fr       */
+/*   Created: 2022/06/10 21:10:14 by echrysta          #+#    #+#             */
+/*   Updated: 2022/06/10 21:11:23 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_list_token(t_token *list_token)
+int	local_cd_exit(int exit_status, char **cwd, t_table_cmd *table)
 {
-	t_token	*tmp;
-
-	tmp = list_token;
-	while (tmp)
+	free(*cwd);
+	*cwd = NULL;
+	if (exit_status == EXIT_SUCCESS)
+		return (EXIT_SUCCESS);
+	else
 	{
-		printf("list_token->next %s\n", tmp->value);
-		tmp = tmp->next;
+		ft_putstr_fd("zhs: cd: ", 2);
+		perror(table->arguments[1]);
+		return (EXIT_FAILURE);
 	}
 }
 
-void	print_list_arguments(char **arg)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		printf("arg[i] = %s\n", arg[i]);
-		i++;
-	}
-}
-
-void	print_list_env(t_env_var *list_token)
+t_env_var	*find_key(t_env_var	*env_init_tmp, char *which_pwd)
 {
 	t_env_var	*tmp;
 
-	tmp = list_token;
+	tmp = env_init_tmp;
 	while (tmp)
 	{
-		if (tmp->value)
+		if (ft_strlen(tmp->key) == ft_strlen(which_pwd))
 		{
-			ft_putstr_fd(tmp->key, 1);
-			ft_putstr_fd(tmp->value, 1);
-			ft_putchar_fd('\n', 1);
+			if (check_str(tmp->key, which_pwd))
+				break ;
 		}
 		tmp = tmp->next;
 	}
+	return (tmp);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 12:55:00 by mbutter           #+#    #+#             */
-/*   Updated: 2022/06/04 18:51:47 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/06/10 21:06:43 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,6 @@ void	exit_all_prog()
 
 int main()
 {
-	/* 
-	line = readline("minishell> ");
-	free(line);
-	extern char **environ;
-
-	if (environ == NULL)
-		printf("NULL\n");
-	else
-		printf("not null\n");
-
-	int i = 0;
-	while (environ[i] != NULL)
-	{
-		printf("%s\n", environ[i++]);
-	} */
 	char *line;
 	t_token *list_token;
 	t_table_cmd *table;
@@ -56,12 +41,15 @@ int main()
 		add_history(line);
 		if(line[0] != '\0')
 		{
-			
 			list_token = lexer(line);
-			table = parser(list_token);
-			executor(table);
-			free(line);
+			if (list_token != NULL)
+				table = parser(&list_token);
+			if (list_token == NULL && table != NULL)
+				executor(table);
+			free_table(&table);
 		}
+		free(line);
 	}
+	free_global_env();
 	exit (g_envp.status_exit);
 }

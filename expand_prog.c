@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_prog.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/29 14:44:51 by echrysta          #+#    #+#             */
-/*   Updated: 2022/06/04 17:00:12 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/06/08 21:12:17 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	find_dollar(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
 	{
 		if (str[i] == '$')
-			return (1); //нашел доллар
+			return (1);
 		i++;
 	}
 	return (0);
@@ -30,7 +30,9 @@ t_token	*expand_prog(t_token *list_token)
 {
 	t_token	*tmp;
 	char	*prev;
-	
+
+	if (!list_token)
+		return (list_token);
 	prev = NULL;
 	tmp = list_token;
 	while (tmp)
@@ -39,9 +41,10 @@ t_token	*expand_prog(t_token *list_token)
 		{
 			if (find_dollar(tmp->value))
 			{
-				if (tmp->key != e_single_quote && tmp->key != e_double_quote && tmp->connect == 1)
+				if (tmp->key != e_single_quote
+					&& tmp->key != e_double_quote && tmp->connect == 1)
 				{
-					list_token = del_elem_list(tmp, list_token);
+					list_token = del_elem_list(tmp, &list_token);
 					tmp = list_token;
 				}
 			}

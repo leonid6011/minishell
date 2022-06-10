@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 15:51:58 by mbutter           #+#    #+#             */
-/*   Updated: 2022/06/04 16:34:33 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/06/08 14:26:04 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int print_error(char *shell_name, char *cmd, char *arg, char *message)
+int	print_error(char *shell_name, char *cmd, char *arg, char *message)
 {
 	if (shell_name != NULL)
 	{
@@ -44,6 +44,8 @@ void	arr_free(char ***arr)
 
 	tmp = *arr;
 	i = 0;
+	if (tmp == NULL)
+		return ;
 	while (tmp[i] != NULL)
 	{
 		free(tmp[i]);

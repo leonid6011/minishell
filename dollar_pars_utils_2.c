@@ -1,31 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   dollar_pars_utils_2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/19 15:17:54 by echrysta          #+#    #+#             */
-/*   Updated: 2022/06/09 22:06:15 by echrysta         ###   ########.fr       */
+/*   Created: 2022/06/08 22:06:19 by echrysta          #+#    #+#             */
+/*   Updated: 2022/06/08 22:09:17 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	pwd_fun(void)
+int	count_token(t_token *list_token)
 {
-	char	*str;
+	int	i;
 
-	str = NULL;
-	str = getcwd(str, 0);
-	if (str == NULL)
+	i = 0;
+	while (list_token)
 	{
-		ft_putstr_fd("pwd failure\n", STDERR_FILENO);
-		return (EXIT_FAILURE);
+		list_token = list_token->next;
+		i++;
 	}
-	ft_putstr_fd(str, STDOUT_FILENO);
-	ft_putchar_fd('\n', STDOUT_FILENO);
-	free(str);
-	str = NULL;
-	return (EXIT_SUCCESS);
+	return (i);
+}
+
+int	check_str_for_clean(char *str1, char *str2)
+{
+	int	i;
+
+	if (!str1)
+		return (0);
+	if (!str2)
+		return (0);
+	i = 0;
+	while (str1[i] != '\0' && str2[i] != '\0')
+	{
+		if (str1[i] != str2[i])
+			return (0);
+		i++;
+	}
+	if (ft_strlen(str1) != ft_strlen(str2))
+		return (0);
+	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_list.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbutter <mbutter@student.21-school.ru>     +#+  +:+       +#+        */
+/*   By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 16:29:52 by mbutter           #+#    #+#             */
-/*   Updated: 2022/06/04 13:56:09 by mbutter          ###   ########.fr       */
+/*   Updated: 2022/06/10 19:25:33 by echrysta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	token_add_back(t_token **lst, t_token *new)
 	}
 }
 
-//дописал удаление токена из середины списка ил конца
 void	del_elem(t_token *del, t_token *head)
 {
 	t_token	*tmp;
@@ -57,24 +56,31 @@ void	del_elem(t_token *del, t_token *head)
 	free (del);
 }
 
-void	token_destroy(t_token *token)
+void	token_destroy(t_token **token)
 {
-	if (token != NULL)
+	t_token	*tmp;
+
+	tmp = *token;
+	if (tmp != NULL)
 	{
-		free(token->value);
-		token->value = NULL;
-		free(token);
+		free(tmp->value);
+		tmp->value = NULL;
+		free(tmp);
+		*token = NULL;
 	}
 }
 
-void	token_destroy_all(t_token *token)
+void	token_destroy_all(t_token **token)
 {
-	t_token *tmp;
+	t_token	*tmp;
+	t_token	*next;
 
-	while (token != NULL)
+	tmp = *token;
+	while (tmp != NULL)
 	{
-		tmp = token->next;
-		token_destroy(token);
-		token = tmp;
+		next = tmp->next;
+		token_destroy(&tmp);
+		tmp = next;
 	}
+	*token = NULL;
 }
