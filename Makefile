@@ -6,7 +6,7 @@
 #    By: echrysta <echrysta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/04 15:40:50 by mbutter           #+#    #+#              #
-#    Updated: 2022/06/10 21:10:38 by echrysta         ###   ########.fr        #
+#    Updated: 2022/06/11 17:32:18 by echrysta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRCS		=	main.c \
 				parser.c \
 				exec_child.c \
 				exec_redir.c \
+				exec_redir_2.c \
 				exec_wait.c \
 				exec_scmd.c \
 				exec_pipe.c \
@@ -36,6 +37,7 @@ SRCS		=	main.c \
 				builtin.c \
 				echo.c\
 				cd.c\
+				cd_2.c\
 				cd_utils.c\
 				pwd.c\
 				env.c\
